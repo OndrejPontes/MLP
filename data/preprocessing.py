@@ -1,8 +1,8 @@
 import csv
 import math
 
-FILE = "testing_data.csv"
-NORM_FILE = "testing_after_norm.csv"
+FILE = "poker-hand-training-true.csv"
+NORM_FILE = "poker-hand-normalized.csv"
 HEART = (0, 0)
 SPADE = (0, 1)
 DIAMOND = (1, 0)
@@ -26,8 +26,8 @@ def compute_sum_of_values():
             sum5 += int(line[9])
             count_of_lines += 1
 
-            if count_of_lines % 25000 == 0:
-                print(count_of_lines)
+            if count_of_lines % 10000 == 0:
+                print(str(count_of_lines/10000) + "0k was procesed")
 
     return sum1,sum2,sum3,sum4,sum5, count_of_lines
 
