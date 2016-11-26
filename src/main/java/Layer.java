@@ -1,3 +1,5 @@
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,27 +14,13 @@ public class Layer {
             neurons.add(new Neuron());
     }
 
-    // compute the output of the layer
     public List<Double> evaluate(ArrayList<Double> inputs) {
-
-        // add an input (bias) if necessary
-//        if (in.length != getWeights(0).length)
-//            inputs = add_bias(in);
-//        else
-//            inputs = in;
-//
-//        assert (getWeights(0).length == inputs.length);
-        List<Double> result = new ArrayList<>();
-        for (Neuron n : neurons) {
-            result.add(n.getResult(inputs));
+        if(inputs.size() < 1){
+            throw new IllegalArgumentException();
         }
-        // stimulate each neuron of the layer and get its output
-//        for (int i = 1; i < nuberOfNeurons; ++i)
-//            _outputs[i] = neurons.get(i).activate(inputs);
-//
-//         bias treatment
-//        _outputs[0] = 1.0f;
 
+        List<Double> result = new ArrayList<>();
+        neurons.forEach(neuron -> result.add(neuron.getResult(inputs)));
         return result;
     }
 

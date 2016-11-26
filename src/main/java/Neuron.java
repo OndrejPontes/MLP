@@ -14,7 +14,7 @@ public class Neuron {
     private static final double lambda = 1.5d;
 
     // activate the neuron with given inputs, return the output
-    public double getResult(ArrayList<Double> inputs)
+    public Double getResult(List<Double> inputs)
     {
         if (weights.isEmpty()){
             for (Double d : inputs) {
