@@ -4,27 +4,27 @@ import java.util.List;
 /**
  * @author opontes
  */
-public interface MultilayerPerceptronInterface {
+public interface Neuralnetwork {
     /**
      * Takes data from csv file and set layers with weights
      * @param file csv file with information about weights and layers
      * @return itself and you can give another command
      */
-    MultilayerPerceptronInterface initialize(File file);
+    Neuralnetwork initialize(File file);
 
     /**
      * Trains Neural Network with data saved into csv file
      * @param csvFile file with saved data
      * @return itself and you can give another command
      */
-    MultilayerPerceptronInterface train(File csvFile);
+    Neuralnetwork train(File csvFile);
 
     /**
      * Saves information about weights and layers into file with given name
      * @param nameOfFile name of file
      * @return itself and you can give another command
      */
-    MultilayerPerceptronInterface save(String nameOfFile);
+    Neuralnetwork save(String nameOfFile);
 
     /**
      * Puts data into Neural Network and return some result
@@ -40,5 +40,5 @@ public interface MultilayerPerceptronInterface {
      * @param numberOfNeuronsInLayers number of neurons in each hidden layer, order must be from input to output layer
      * @return itself and you can give another command
      */
-    MultilayerPerceptronInterface setLayers(Integer numberOfInputs, Integer numberOfHiddenLayers, List<Integer> numberOfNeuronsInLayers);
+    Neuralnetwork setLayers(Integer numberOfInputs, Integer numberOfHiddenLayers, List<Integer> numberOfNeuronsInLayers);
 }
