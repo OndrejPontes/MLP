@@ -1,36 +1,40 @@
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.io.File;
 import java.util.List;
 
 /**
  * @author opontes
  */
-public class MultiLayerPerceptron implements Neuralnetwork {
+public class MultiLayerPerceptron implements NeuralNetwork {
     private Layer inputLayer;
     private Layer outputLayer;
     private List<Layer> hiddenLayers;
 
     @Override
-    public Neuralnetwork initialize(File file) {
-        return null;
+    public NeuralNetwork initialize(File file) {
+        throw new NotImplementedException();
     }
 
     @Override
-    public Neuralnetwork train(File csvFile) {
-        return null;
+    public NeuralNetwork train(File csvFile) {
+        throw new NotImplementedException();
     }
 
     @Override
-    public Neuralnetwork save(String nameOfFile) {
-        return null;
+    public NeuralNetwork save(String nameOfFile) {
+        throw new NotImplementedException();
     }
 
     @Override
     public double getResult(List<Double> data) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
-    public Neuralnetwork setLayers(Integer numberOfInputs, Integer numberOfHiddenLayers, List<Integer> numberOfNeuronsInLayers) {
-        return null;
+    public NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, Integer numberOfHiddenLayers, List<Integer> numberOfNeuronsInLayers) {
+        throw new NotImplementedException();
     }
+
+
 }

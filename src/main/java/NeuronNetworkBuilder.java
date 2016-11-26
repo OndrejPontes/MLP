@@ -15,16 +15,16 @@ public class NeuronNetworkBuilder {
     public NeuronNetworkBuilder() {
     }
 
-    public NeuronNetworkBuilder addLayerWith(int numberOfNeurons){
+    public NeuronNetworkBuilder addLayerWith(int numberOfNeurons) {
         layers.add(new Layer(numberOfNeurons));
         return this;
     }
 
-    public NeuronNetworkBuilder neurons(){
+    public NeuronNetworkBuilder neurons() {
         return this;
     }
 
-    public List<Layer> build(){
+    public List<Layer> build() {
         return layers;
     }
 }
