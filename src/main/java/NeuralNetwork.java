@@ -37,9 +37,8 @@ public interface NeuralNetwork {
      * Set layers and weights, this method is primary intend for comparison different structures of layers and neurons
      * @param numberOfInputNeurons number of inputs neurons
      * @param numberOfOutputNeurons number of output neurons
-     * @param numberOfHiddenLayers number of hidden layers
-     * @param numberOfNeuronsInLayers number of neurons in each hidden layer, order must be from input to output layer
+     * @param numberOfNeuronsInHiddenLayers number of neurons in each hidden layer, order is from input to output layer
      * @return itself and you can give another command
      */
-    NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, Integer numberOfHiddenLayers, List<Integer> numberOfNeuronsInLayers);
+    NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, List<Integer> numberOfNeuronsInHiddenLayers);
 }
