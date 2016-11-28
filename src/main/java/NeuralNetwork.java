@@ -31,7 +31,7 @@ public interface NeuralNetwork {
      * @param data to put into Neural Network
      * @return result of computation
      */
-    double getResult(List<List<Double>> data);
+    List<Double> getResult(List<List<Double>> data);
 
     /**
      * Set layers and weights, this method is primary intend for comparison different structures of layers and neurons

@@ -17,7 +17,7 @@ public class Neuron {
         if (weights.isEmpty() && bias == null){
             weights.addAll(inputs.stream().map(ignored -> new Random().nextDouble()).collect(Collectors.toList()));
             bias = new Random().nextDouble();
-            weights.add(bias);
+            weights.add(bias);   // bias ?
         }
 
         double value = 0.0d;
