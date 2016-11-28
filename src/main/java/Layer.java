@@ -19,6 +19,7 @@ public class Layer {
 
         List<Double> result = new ArrayList<>();
         neurons.forEach(neuron -> result.add(neuron.getResult(inputs)));
+
         return result;
     }
 

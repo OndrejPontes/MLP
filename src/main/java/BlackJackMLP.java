@@ -33,7 +33,7 @@ public class BlackJackMLP implements NeuralNetwork {
     }
 
     @Override
-    public double getResult(List<Double> data) {
+    public double getResult(List<List<Double>> data) {
         throw new NotImplementedException();
     }
 
@@ -44,7 +44,12 @@ public class BlackJackMLP implements NeuralNetwork {
         hiddenLayers = new ArrayList<Layer>() {{
             numberOfNeuronsInHiddenLayers.forEach(numberOfNeurons -> add(new Layer(numberOfNeurons)));
         }};
+        return this;
+    }
 
+    @Override
+    public NeuralNetwork print() {
+        inputLayer.print();
         throw new NotImplementedException();
     }
 }

@@ -31,7 +31,7 @@ public interface NeuralNetwork {
      * @param data to put into Neural Network
      * @return result of computation
      */
-    double getResult(List<Double> data);
+    double getResult(List<List<Double>> data);
 
     /**
      * Set layers and weights, this method is primary intend for comparison different structures of layers and neurons
@@ -41,4 +41,10 @@ public interface NeuralNetwork {
      * @return itself and you can give another command
      */
     NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, List<Integer> numberOfNeuronsInHiddenLayers);
+
+    /**
+     * Print Neural Network on standard output
+     * @return itself and you can give another command
+     */
+    NeuralNetwork print();
 }

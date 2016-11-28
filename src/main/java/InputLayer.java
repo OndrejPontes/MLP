@@ -25,4 +25,8 @@ public class InputLayer {
 
         return result;
     }
+
+    public void print() {
+        neurons.forEach(neuron -> neuron.print());
+    }
 }
