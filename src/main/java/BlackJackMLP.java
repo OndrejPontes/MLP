@@ -33,7 +33,7 @@ public class BlackJackMLP implements NeuralNetwork {
     }
 
     @Override
-    public double getResult(List<List<Double>> data) {
+    public List<Double> getResult(List<List<Double>> data) {
         throw new NotImplementedException();
     }
 
