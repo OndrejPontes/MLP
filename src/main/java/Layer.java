@@ -6,6 +6,7 @@ import java.util.List;
  */
 public class Layer {
     private List<Neuron> neurons = new ArrayList<>();
+    private List<Double> results = new ArrayList<>();
 
     public Layer(int numberOfNeurons) {
         for (int i = 0; i < numberOfNeurons; ++i)
@@ -19,6 +20,8 @@ public class Layer {
 
         List<Double> result = new ArrayList<>();
         neurons.forEach(neuron -> result.add(neuron.getResult(inputs)));
+
+        results = result;
 
         return result;
     }
@@ -37,5 +40,13 @@ public class Layer {
 
     public void setWeight(int i, int j, double v) {
         neurons.get(i).setWeight(j, v);
+    }
+
+    public List<Double> getResults() {
+        return results;
+    }
+
+    public List<Neuron> getNeurons() {
+        return neurons;
     }
 }

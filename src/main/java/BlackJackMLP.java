@@ -9,7 +9,7 @@ import java.util.List;
  * @author opontes
  */
 public class BlackJackMLP implements NeuralNetwork {
-    private Integer inputLayer;
+    private Integer numberOfInputs;
     private Layer outputLayer;
     private List<Layer> hiddenLayers;
 
@@ -34,7 +34,7 @@ public class BlackJackMLP implements NeuralNetwork {
 
     @Override
     public List<Double> getResult(List<Double> data) {
-        if(data.size() != inputLayer) throw new IllegalArgumentException();
+        if(data.size() != numberOfInputs) throw new IllegalArgumentException();
 
         for (Layer layer : hiddenLayers) {
             data = layer.evaluate(data);
@@ -45,7 +45,7 @@ public class BlackJackMLP implements NeuralNetwork {
 
     @Override
     public NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, List<Integer> numberOfNeuronsInHiddenLayers) {
-        inputLayer = numberOfInputNeurons;
+        numberOfInputs = numberOfInputNeurons;
         outputLayer = new Layer(numberOfOutputNeurons);
         hiddenLayers = new ArrayList<Layer>() {{
             numberOfNeuronsInHiddenLayers.forEach(numberOfNeurons -> add(new Layer(numberOfNeurons)));
