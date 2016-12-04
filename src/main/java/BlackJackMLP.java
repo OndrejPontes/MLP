@@ -1,3 +1,4 @@
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
@@ -9,7 +10,7 @@ import java.util.List;
  * @author opontes
  */
 public class BlackJackMLP implements NeuralNetwork {
-    private Layer inputLayer;
+    private Integer inputLayer;
     private Layer outputLayer;
     private List<Layer> hiddenLayers;
 
@@ -33,13 +34,19 @@ public class BlackJackMLP implements NeuralNetwork {
     }
 
     @Override
-    public List<Double> getResult(List<List<Double>> data) {
-        throw new NotImplementedException();
+    public List<Double> getResult(List<Double> data) {
+        if(data.size() != inputLayer) throw new IllegalArgumentException();
+
+        for (Layer layer : hiddenLayers) {
+            data = layer.evaluate(data);
+        }
+
+        return outputLayer.evaluate(data);
     }
 
     @Override
     public NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, List<Integer> numberOfNeuronsInHiddenLayers) {
-        inputLayer = new Layer(numberOfInputNeurons);
+        inputLayer = numberOfInputNeurons;
         outputLayer = new Layer(numberOfOutputNeurons);
         hiddenLayers = new ArrayList<Layer>() {{
             numberOfNeuronsInHiddenLayers.forEach(numberOfNeurons -> add(new Layer(numberOfNeurons)));

@@ -12,7 +12,7 @@ public class Layer {
             neurons.add(new Neuron());
     }
 
-    public List<Double> evaluate(ArrayList<Double> inputs) {
+    public List<Double> evaluate(List<Double> inputs) {
         if(inputs.size() < 1){
             throw new IllegalArgumentException();
         }
