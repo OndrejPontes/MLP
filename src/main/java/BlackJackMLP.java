@@ -1,4 +1,3 @@
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
@@ -15,7 +14,7 @@ public class BlackJackMLP implements NeuralNetwork {
     private List<Layer> hiddenLayers;
 
     public BlackJackMLP() {
-        setLayers(5, 1, Collections.emptyList());
+        setLayers(10, 1, Collections.emptyList());
     }
 
     @Override
