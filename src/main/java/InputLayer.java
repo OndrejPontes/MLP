@@ -5,7 +5,7 @@ import java.util.List;
  * @author opontes
  */
 public class InputLayer {
-    private List<Neuron> neurons = new ArrayList<>();
+    private List<Neuron> neurons = new ArrayList<Neuron>();
 
     public InputLayer(int numberOfNeurons) {
         for (int i = 0; i < numberOfNeurons; ++i)
@@ -17,7 +17,7 @@ public class InputLayer {
             throw new IllegalArgumentException();
         }
 
-        List<Double> result = new ArrayList<>();
+        List<Double> result = new ArrayList<Double>();
 
         for (int i = 0; i < inputs.size(); i++) {
             result.add(neurons.get(i).getResult(inputs.get(i)));
