@@ -1,13 +1,22 @@
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
+<<<<<<< 20330b99aed63fafbd95d11806f0b1d882166693
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+=======
+import java.io.FileReader;
+import java.io.IOException;
+>>>>>>> Read input data as csv file
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author opontes
@@ -46,7 +55,24 @@ public class BlackJackMLP implements NeuralNetwork {
 
     @Override
     public NeuralNetwork train(File csvFile) {
-        throw new NotImplementedException();
+        try {
+            CSVReader reader = null;
+            reader = new CSVReader(new FileReader(csvFile));
+            String [] nextLine;
+            try {
+                while ((nextLine = reader.readNext()) != null) {
+                    // nextLine[] is an array of values from the line
+
+                    System.out.println(nextLine[0] + nextLine[1] + "etc...");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, ex);
+            }         
+            return this;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return this;
     }
 
     @Override

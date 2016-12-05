@@ -1,3 +1,4 @@
 .idea
 *.iml
 poker-hand*
+/target/
