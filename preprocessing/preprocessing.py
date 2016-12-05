@@ -88,6 +88,7 @@ def divide_tuples(line):
             newline.append(line[i])
     newline.append(int(line[10]))
 
+    newline = ','.join(map(str, newline))  # vytvori z listu jeden string oddeleny ciarkami (riadok v csv subore)
     return newline
 
 
