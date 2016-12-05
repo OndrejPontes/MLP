@@ -26,7 +26,7 @@ public class Layer {
         return result;
     }
 
-    public int size() {
+    public Integer size() {
         return neurons.size();
     }
 

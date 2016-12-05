@@ -1,30 +1,16 @@
-import enums.ActivationFunction;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static enums.ActivationFunction.SIGMOID;
+import java.util.Arrays;
 
 /**
  * @author opontes
  */
 public class NeuronNetworkBuilder {
-    private List<Layer> layers = new ArrayList<>();
-    private ActivationFunction activationFunction = SIGMOID;
+    public static void main(String[] args) {
+        NeuralNetwork neuralNetwork = new BlackJackMLP()
+                .setLayers(2, 4, Arrays.asList(1, 2, 3, 4, 5, 6), 5);
 
-    public NeuronNetworkBuilder() {
-    }
+        neuralNetwork.getResult(Arrays.asList(2d, 3d));
 
-    public NeuronNetworkBuilder addLayerWith(int numberOfNeurons) {
-        layers.add(new Layer(numberOfNeurons));
-        return this;
-    }
+        neuralNetwork.save("TestFile.csv");
 
-    public NeuronNetworkBuilder neurons() {
-        return this;
-    }
-
-    public List<Layer> build() {
-        return layers;
     }
 }

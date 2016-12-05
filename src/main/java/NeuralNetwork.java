@@ -7,10 +7,10 @@ import java.util.List;
 public interface NeuralNetwork {
     /**
      * Takes data from csv file and set layers with weights
-     * @param file csv file with information about weights and layers
+     * @param file name of file, where is information about weights and layers
      * @return itself and you can give another command
      */
-    NeuralNetwork initialize(File file);
+    NeuralNetwork initialize(String file);
 
     /**
      * Trains Neural Network with data saved into csv file
@@ -40,11 +40,18 @@ public interface NeuralNetwork {
      * @param numberOfNeuronsInHiddenLayers number of neurons in each hidden layer, order is from input to output layer
      * @return itself and you can give another command
      */
-    NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons, List<Integer> numberOfNeuronsInHiddenLayers);
+    NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons,
+                            List<Integer> numberOfNeuronsInHiddenLayers, Integer learningSpeed);
 
     /**
      * Print Neural Network on standard output
      * @return itself and you can give another command
      */
     NeuralNetwork print();
+
+    /**
+     * Reset neural networks weights
+     * @return itself and you can give another command
+     */
+    NeuralNetwork reset();
 }
