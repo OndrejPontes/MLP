@@ -42,12 +42,28 @@ public class BlackJackMLP implements NeuralNetwork {
             List<List<Double>> weights = new ArrayList<>();
 
             for (int i = 1; i < lines.size(); i++) {
-
+                Arrays.asList(lines.get(i).split(", ")).forEach(neuron -> {
+                    List<Double> numbers = new ArrayList<>();
+                    Arrays.asList(neuron.split(" ")).forEach(x -> {
+                        numbers.add(Double.parseDouble(x));
+                    });
+                    weights.add(numbers);
+                });
             }
+
+            List<Integer> setHidden = new ArrayList<>();
+
+            weights.forEach(x -> setHidden.add(x.size()));
+
+            setLayers(inputs, outputs, setHidden, speed);
+
+            //TODO finish setting weights
+
         } catch (IOException e) {
             System.out.println("Can not find a file.");
         }
-        throw new NotImplementedException();
+
+        return this;
     }
 
     // compute error for one sample from dataset
@@ -190,6 +206,7 @@ public class BlackJackMLP implements NeuralNetwork {
         hiddenLayers = new ArrayList<Layer>() {{
             numberOfNeuronsInHiddenLayers.forEach(numberOfNeurons -> add(new Layer(numberOfNeurons)));
         }};
+        learningRate = learningSpeed;
         return this;
     }
 

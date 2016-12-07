@@ -6,6 +6,7 @@ import java.util.Arrays;
 public class NeuronNetworkBuilder {
     public static void main(String[] args) {
         NeuralNetwork neuralNetwork = new BlackJackMLP()
+//                .initialize("TestFile.csv")
                 .setLayers(2, 4, Arrays.asList(1, 2, 3, 4, 5, 6), 5);
 
         neuralNetwork.getResult(Arrays.asList(2d, 3d));
