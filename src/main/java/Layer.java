@@ -7,6 +7,7 @@ import java.util.List;
 public class Layer {
     private List<Neuron> neurons = new ArrayList<>();
     private List<Double> results = new ArrayList<>();
+    private List<Double> deltas = new ArrayList<>();
 
     public Layer(int numberOfNeurons) {
         for (int i = 0; i < numberOfNeurons; ++i)
@@ -48,5 +49,21 @@ public class Layer {
 
     public List<Neuron> getNeurons() {
         return neurons;
+    }
+    
+    public List<Double> getDeltas() {
+        return deltas;
+    }
+    
+    public void setDeltas(List<Double> deltas) {
+        this.deltas = deltas;
+    }
+    
+    public void setDelta(int i, Double delta) {
+        deltas.set(i, delta);
+    }  
+    
+    public Double getDelta(int i) {
+        return deltas.get(i);
     }
 }
