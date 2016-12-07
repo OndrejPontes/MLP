@@ -91,10 +91,38 @@ public class BlackJackMLP implements NeuralNetwork {
         return outputError;
     }
     
-    private void backpropagation(List<Double> outputError) {
+    private void updateWeights(List<Double> inputs) {
+        // weights of output layer
+        for(int j = 0; j < outputLayer.getNeurons().size(); j++) {
+            for(int k = 0; k < outputLayer.getWeights(j).size(); k++) {
+                Double res = hiddenLayers.get(hiddenLayers.size()-1).getResults().get(k);
+                Double weightChange = - learningRate * outputLayer.getDelta(j) * res;
+                outputLayer.setWeight(j, k, outputLayer.getWeight(j, k) + weightChange);
+            }
+        }
+        // weights of hidden layers
+        for(int i = hiddenLayers.size()-1; i > 0; i--) {
+            for(int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
+                for(int k = 0; k < hiddenLayers.get(i).getWeights(j).size(); k++) {
+                    Double res = hiddenLayers.get(i-1).getResults().get(k);
+                    Double weightChange = - learningRate * hiddenLayers.get(i).getDelta(j) * res;
+                    hiddenLayers.get(i).setWeight(j, k, hiddenLayers.get(i).getWeight(j, k) + weightChange);
+                }
+            }
+        }
+        // weights of the first hidden layer (input goes into this layer)
+        for(int j = 0; j < hiddenLayers.get(0).getNeurons().size(); j++) {
+            for(int k = 0; j < hiddenLayers.get(0).getWeights(j).size(); k++) {
+                // predpoklad, ze do neuronu ide len 1 vstup
+                Double weightChange = - learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(j);
+                hiddenLayers.get(0).setWeight(j, k, hiddenLayers.get(0).getWeight(j, k) + weightChange);
+            } 
+        }
+    }
+    
+    private void computeDeltas(List<Double> outputError) {
         // compute delta for output layer
         for(int j = 0; j < outputLayer.getNeurons().size(); j++) {
-            List<Double> weights = outputLayer.getNeurons().get(j).getWeights();
             Double delta = outputLayer.getResults().get(j) * (1 - outputLayer.getResults().get(j)) * outputError.get(j);
             outputLayer.setDelta(j, delta);
         }
@@ -111,21 +139,15 @@ public class BlackJackMLP implements NeuralNetwork {
                     hiddenLayers.get(i).setDelta(j, delta);
                 }
             } else {
-                // toto je este stara ZLA verzia !!
-                // other hidden layers
                 for(int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
-                    List<Double> weights = hiddenLayers.get(i).getWeights(j);
                     Double neuronResult = hiddenLayers.get(i).getResults().get(j);
                     Double sum = 0d;
-                    for(int k = 0; k < weights.size(); k++) {
-                        Double weightChange = - learningRate * neuronResult * hiddenLayers.get(i+1).getDelta(k);
-                        hiddenLayers.get(i).setWeight(j, k, weights.get(k) + weightChange);
-                        
-                        sum += weights.get(k) * hiddenLayers.get(i+1).getDelta(k);
+                    for(int k = 0; k < hiddenLayers.get(i+1).getNeurons().size(); k++) {  // pocet neuronov vo vrstve nad
+                        sum += hiddenLayers.get(i+1).getDelta(k) * hiddenLayers.get(i+1).getNeurons().get(k).getWeight(j);
                     }
                     Double delta = neuronResult * (1 - neuronResult) * sum;
-                    hiddenLayers.get(i).setDelta(j, delta);
-                } 
+                    hiddenLayers.get(i).setDelta(j, delta);                  
+                }
             }
         }
     }
@@ -149,8 +171,10 @@ public class BlackJackMLP implements NeuralNetwork {
                         List<Double> targetValues = input.subList(numberOfInputs, input.size()-1);
                         
                         List<Double> outputError = new ArrayList<>();
+                        // backpropagation
                         outputError = computeOutputError(results, targetValues);
-                        backpropagation(outputError);
+                        computeDeltas(outputError);
+                        updateWeights(input.subList(0, numberOfInputs - 1));
                         
                         // compute global error throught all samples from dataset
                         globalError += computeSquaredErrorFunction(results, targetValues);            
