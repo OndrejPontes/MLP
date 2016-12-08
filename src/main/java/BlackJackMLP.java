@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import com.opencsv.CSVReader;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.logging.Level;
@@ -72,122 +74,130 @@ public class BlackJackMLP implements NeuralNetwork {
             throw new IllegalArgumentException("Can not compute error function - size of result does not equal to size of target values.");
         }
         Double errorOfSample = 0d;
-        for(int i = 0; i < results.size(); i++) {
+        for (int i = 0; i < results.size(); i++) {
             errorOfSample += Math.sqrt(results.get(i) - targetValues.get(i));
         }
-        
+
         return 0.5 * errorOfSample;
     }
-      
+
     private List<Double> computeOutputError(List<Double> results, List<Double> targetValues) {
         if (results.size() != targetValues.size()) throw new IllegalArgumentException("Can not compute output error !");
-      
+
         List<Double> outputError = new ArrayList<>();
-        for(int i = 0; i < results.size(); i++) {
+        for (int i = 0; i < results.size(); i++) {
             Double error = targetValues.get(i) - results.get(i);
             outputError.add(i, error);
         }
-        
+
         return outputError;
     }
-    
+
     private void updateWeights(List<Double> inputs) {
         // weights of output layer
-        for(int j = 0; j < outputLayer.getNeurons().size(); j++) {
-            for(int k = 0; k < outputLayer.getWeights(j).size(); k++) {
-                Double res = hiddenLayers.get(hiddenLayers.size()-1).getResults().get(k);
-                Double weightChange = - learningRate * outputLayer.getDelta(j) * res;
+        for (int j = 0; j < outputLayer.getNeurons().size(); j++) {
+            for (int k = 0; k < outputLayer.getWeights(j).size(); k++) {
+                Double res = hiddenLayers.get(hiddenLayers.size() - 1).getResults().get(k);
+                Double weightChange = -learningRate * outputLayer.getDelta(j) * res;
                 outputLayer.setWeight(j, k, outputLayer.getWeight(j, k) + weightChange);
             }
         }
         // weights of hidden layers
-        for(int i = hiddenLayers.size()-1; i > 0; i--) {
-            for(int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
-                for(int k = 0; k < hiddenLayers.get(i).getWeights(j).size(); k++) {
-                    Double res = hiddenLayers.get(i-1).getResults().get(k);
-                    Double weightChange = - learningRate * hiddenLayers.get(i).getDelta(j) * res;
+        for (int i = hiddenLayers.size() - 1; i > 0; i--) {
+            for (int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
+                for (int k = 0; k < hiddenLayers.get(i).getWeights(j).size(); k++) {
+                    Double res = hiddenLayers.get(i - 1).getResults().get(k);
+                    Double weightChange = -learningRate * hiddenLayers.get(i).getDelta(j) * res;
                     hiddenLayers.get(i).setWeight(j, k, hiddenLayers.get(i).getWeight(j, k) + weightChange);
                 }
             }
         }
         // weights of the first hidden layer (input goes into this layer)
-        for(int j = 0; j < hiddenLayers.get(0).getNeurons().size(); j++) {
-            for(int k = 0; j < hiddenLayers.get(0).getWeights(j).size(); k++) {
+        for (int j = 0; j < hiddenLayers.get(0).getNeurons().size(); j++) {
+            for (int k = 0; j < hiddenLayers.get(0).getWeights(j).size(); k++) {
                 // predpoklad, ze do neuronu ide len 1 vstup
-                Double weightChange = - learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(j);
+                Double weightChange = -learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(j);
                 hiddenLayers.get(0).setWeight(j, k, hiddenLayers.get(0).getWeight(j, k) + weightChange);
-            } 
+            }
         }
     }
-    
+
     private void computeDeltas(List<Double> outputError) {
         // compute delta for output layer
-        for(int j = 0; j < outputLayer.getNeurons().size(); j++) {
+        for (int j = 0; j < outputLayer.getNeurons().size(); j++) {
             Double delta = outputLayer.getResults().get(j) * (1 - outputLayer.getResults().get(j)) * outputError.get(j);
             outputLayer.setDelta(j, delta);
         }
-            
-        for(int i = hiddenLayers.size()-1; i >= 0; i--) {
-            if (i == hiddenLayers.size()-1) {    // hidden layer bellow output layer
-                for(int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {  // iterate throught all neurons in layer i
-                    Double neuronResult = hiddenLayers.get(i).getResults().get(j);    
+
+        for (int i = hiddenLayers.size() - 1; i >= 0; i--) {
+            if (i == hiddenLayers.size() - 1) {    // hidden layer bellow output layer
+                for (int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {  // iterate throught all neurons in layer i
+                    Double neuronResult = hiddenLayers.get(i).getResults().get(j);
                     Double sum = 0d;
-                    for(int k = 0; k < outputLayer.getNeurons().size(); k++) {  // neurons above actual layer
+                    for (int k = 0; k < outputLayer.getNeurons().size(); k++) {  // neurons above actual layer
                         sum += outputLayer.getDelta(k) * outputLayer.getWeight(k, j);
                     }
                     Double delta = neuronResult * (1 - neuronResult) * sum;
                     hiddenLayers.get(i).setDelta(j, delta);
                 }
             } else {
-                for(int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
+                for (int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
                     Double neuronResult = hiddenLayers.get(i).getResults().get(j);
                     Double sum = 0d;
-                    for(int k = 0; k < hiddenLayers.get(i+1).getNeurons().size(); k++) {  // pocet neuronov vo vrstve nad
-                        sum += hiddenLayers.get(i+1).getDelta(k) * hiddenLayers.get(i+1).getNeurons().get(k).getWeight(j);
+                    for (int k = 0; k < hiddenLayers.get(i + 1).getNeurons().size(); k++) {  // pocet neuronov vo vrstve nad
+                        sum += hiddenLayers.get(i + 1).getDelta(k) * hiddenLayers.get(i + 1).getNeurons().get(k).getWeight(j);
                     }
                     Double delta = neuronResult * (1 - neuronResult) * sum;
-                    hiddenLayers.get(i).setDelta(j, delta);                  
+                    hiddenLayers.get(i).setDelta(j, delta);
                 }
             }
         }
     }
-    
+
     @Override
     public NeuralNetwork train(File csvFile) {
-        double globalError = Double.POSITIVE_INFINITY;
+        Double globalError = Double.POSITIVE_INFINITY;
         while (globalError > 0.001f) {
             globalError = 0d;
             // iterate throught all samples 
             try {
-            CSVReader reader = null;
-            reader = new CSVReader(new FileReader(csvFile));
-            String[] nextLine;
-                try {
-                    while ((nextLine = reader.readNext()) != null) {
-                        if (nextLine.length - 1 != numberOfInputs) {
-                            throw new IllegalArgumentException("Number of inputs does not equal to number of input neurons!");
-                        }       
-                        List<Double> input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
-                        List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
-                        List<Double> targetValues = input.subList(numberOfInputs, input.size()-1);
-                        
-                        List<Double> outputError = new ArrayList<>();
-                        // backpropagation
-                        outputError = computeOutputError(results, targetValues);
-                        computeDeltas(outputError);
-                        updateWeights(input.subList(0, numberOfInputs - 1));
-                        
-                        // compute global error throught all samples from dataset
-                        globalError += computeSquaredErrorFunction(results, targetValues);            
+                CSVReader reader = null;
+                reader = new CSVReader(new FileReader(csvFile));
+                String[] nextLine;
+                while ((nextLine = reader.readNext()) != null) {
+                    if (nextLine.length - 1 != numberOfInputs) {
+                        throw new IllegalArgumentException("Number of inputs does not equal to number of input neurons!");
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, ex);
-                }         
-            } catch (FileNotFoundException ex) {
-            Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, ex);
+                    List<Double> input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
+                    List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
+                    List<Double> targetValues = input.subList(numberOfInputs, input.size() - 1);
+
+                    List<Double> outputError = new ArrayList<>();
+                    // backpropagation
+                    outputError = computeOutputError(results, targetValues);
+                    computeDeltas(outputError);
+                    updateWeights(input.subList(0, numberOfInputs - 1));
+
+                    // compute global error throught all samples from dataset
+                    globalError += computeSquaredErrorFunction(results, targetValues);
+                }
+                List<Double> input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
+                List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
+                List<Double> targetValues = input.subList(numberOfInputs, input.size() - 1);
+
+                // backpropagation
+                List<Double> outputError = computeOutputError(results, targetValues);
+                computeDeltas(outputError);
+                updateWeights(input.subList(0, numberOfInputs - 1));
+
+                // compute global error throught all samples from dataset
+                globalError += computeSquaredErrorFunction(results, targetValues);
+
+            } catch (IOException ex) {
+                Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return this;       
+        return this;
     }
 
     @Override
@@ -255,7 +265,7 @@ public class BlackJackMLP implements NeuralNetwork {
             neuron.getWeights().forEach(weight -> {
                 help += weight.toString() + " ";
             });
-            help = help.substring(0, help.length()-1);
+            help = help.substring(0, help.length() - 1);
             help += ", ";
         });
     }
