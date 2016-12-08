@@ -156,6 +156,7 @@ public class BlackJackMLP implements NeuralNetwork {
     public NeuralNetwork train(File csvFile) {
         double globalError = Double.POSITIVE_INFINITY;
         while (globalError > 0.001f) {
+            globalError = 0d;
             // iterate throught all samples 
             try {
             CSVReader reader = null;
@@ -165,7 +166,7 @@ public class BlackJackMLP implements NeuralNetwork {
                     while ((nextLine = reader.readNext()) != null) {
                         if (nextLine.length - 1 != numberOfInputs) {
                             throw new IllegalArgumentException("Number of inputs does not equal to number of input neurons!");
-                        }
+                        }       
                         List<Double> input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
                         List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
                         List<Double> targetValues = input.subList(numberOfInputs, input.size()-1);
