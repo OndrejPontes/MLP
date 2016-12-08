@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 public class Neuron {
 
     private List<Double> weights = new ArrayList<>();
-    private Double bias;
+    private Double bias = 1d;
     private Double value = 0d;
 
     public Double getResult(List<Double> inputs)
     {
         value = 0d;
-        if (weights.isEmpty() && bias == null){
+        if (weights.isEmpty()){
             weights.addAll(inputs.stream().map(ignored -> -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble()).collect(Collectors.toList()));
-            bias = -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble();  // bias in range -1 to 1
+//            bias = -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble();  // bias in range -1 to 1
             weights.add(1d);
         }
 

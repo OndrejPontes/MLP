@@ -41,7 +41,7 @@ public interface NeuralNetwork {
      * @return itself and you can give another command
      */
     NeuralNetwork setLayers(Integer numberOfInputNeurons, Integer numberOfOutputNeurons,
-                            List<Integer> numberOfNeuronsInHiddenLayers, Integer learningSpeed);
+                            List<Integer> numberOfNeuronsInHiddenLayers, Double learningSpeed);
 
     /**
      * Print Neural Network on standard output

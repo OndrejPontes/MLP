@@ -1,17 +1,21 @@
+import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author opontes
  */
 public class NeuronNetworkBuilder {
     public static void main(String[] args) {
+        File f = new File("data/xor.csv");
         NeuralNetwork neuralNetwork = new BlackJackMLP()
-//                .initialize("TestFile.csv")
-                .setLayers(2, 4, Arrays.asList(1, 2, 3, 4, 5, 6), 5);
+                .setLayers(2, 1, Collections.emptyList(), 1d)
+                .train(f);
+        System.out.println(neuralNetwork.getResult(Arrays.asList(1d, 1d)));
+        System.out.println(neuralNetwork.getResult(Arrays.asList(1d, 0d)));
+        System.out.println(neuralNetwork.getResult(Arrays.asList(0d, 1d)));
+        System.out.println(neuralNetwork.getResult(Arrays.asList(0d, 0d)));
 
-        neuralNetwork.getResult(Arrays.asList(2d, 3d));
-
-        neuralNetwork.save("TestFile.csv");
-
+        neuralNetwork.save("TestFile1.csv");
     }
 }

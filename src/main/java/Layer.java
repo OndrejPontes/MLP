@@ -10,8 +10,10 @@ public class Layer {
     private List<Double> deltas = new ArrayList<>();
 
     public Layer(int numberOfNeurons) {
-        for (int i = 0; i < numberOfNeurons; ++i)
+        for (int i = 0; i < numberOfNeurons; ++i){
             neurons.add(new Neuron());
+            deltas.add(100d);
+        }
     }
 
     public List<Double> evaluate(List<Double> inputs) {
