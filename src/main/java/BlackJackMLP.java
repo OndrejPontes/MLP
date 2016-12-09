@@ -110,9 +110,14 @@ public class BlackJackMLP implements NeuralNetwork {
         // weights of the first hidden layer (input goes into this layer)
         if (!hiddenLayers.isEmpty()) {
             for (int j = 0; j < hiddenLayers.get(0).getNeurons().size(); j++) {
-                for (int k = 0; j < hiddenLayers.get(0).getWeights(j).size(); k++) {
-                    // predpoklad, ze do neuronu ide len 1 vstup
-                    Double weightChange = -learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(j);
+                for (int k = 0; k < hiddenLayers.get(0).getWeights(j).size(); k++) {
+                    // predpoklad, ze do neuronu ide len 1 vstup  ???
+                    Double weightChange;
+                    if(j < numberOfInputs){
+                        weightChange = -learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(j);
+                    } else {
+                        weightChange = -learningRate * hiddenLayers.get(0).getDelta(j) * hiddenLayers.get(0).getResults().get(numberOfInputs);
+                    }
                     hiddenLayers.get(0).setWeight(j, k, hiddenLayers.get(0).getWeight(j, k) + weightChange);
                 }
             }
@@ -178,7 +183,7 @@ public class BlackJackMLP implements NeuralNetwork {
 
                     // backpropagation
                     computeDeltas(computeOutputError(results, targetValues));
-                    updateWeights(input.subList(0, numberOfInputs - 1));
+                    updateWeights(input.subList(0, input.size() - 1));
 
                     // compute global error throught all samples from dataset
                     globalError += computeSquaredErrorFunction(results, targetValues);
@@ -192,13 +197,18 @@ public class BlackJackMLP implements NeuralNetwork {
                 // backpropagation
                 List<Double> outputError = computeOutputError(results, targetValues);
                 computeDeltas(outputError);
-                updateWeights(input.subList(0, numberOfInputs - 1));
+                updateWeights(input.subList(0, input.size() - 1));
 
                 // compute global error throught all samples from dataset
                 globalError += computeSquaredErrorFunction(results, targetValues);
 
                 counter++;
                 fout.println("\t" + counter + "\t" + globalError);
+
+                if(counter % 100000 == 0){
+                    System.out.println(counter / 100000 + "00 k");
+                }
+
             }
         } catch (IOException e) {
             Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, e);
