@@ -82,7 +82,7 @@ public class BlackJackMLP implements NeuralNetwork {
         List<Double> outputError = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
             Double error = targetValues.get(i) - results.get(i);
-            outputError.add(i, error);
+            outputError.add(error);
         }
 
         return outputError;
@@ -91,35 +91,43 @@ public class BlackJackMLP implements NeuralNetwork {
     private void updateWeights(List<Double> inputs) {
         // weights of output layer
         for (int j = 0; j < outputLayer.getNeurons().size(); j++) {
-            for (int k = 0; k < outputLayer.getWeights(j).size(); k++) {
-                Double res = outputLayer.getResults().get(j);
+            for (int k = 0; k < outputLayer.getWeights(j).size() - 1; k++) {  // weights from neuron
+                Double res;
+                if(hiddenLayers.isEmpty()){
+                    res = inputs.get(k);
+                } else {
+                    res = hiddenLayers.get(hiddenLayers.size() - 1).getResults().get(k);
+                }
                 Double weightChange = -learningRate * outputLayer.getDelta(j) * res;
                 outputLayer.setWeight(j, k, outputLayer.getWeight(j, k) + weightChange);
             }
+            int k = outputLayer.getWeights(j).size() - 1;   // weight from bias
+            Double biasWeightChange = - learningRate * outputLayer.getDelta(j);
+            outputLayer.setWeight(j, k, outputLayer.getWeight(j, k) + biasWeightChange);
         }
         // weights of hidden layers
         for (int i = hiddenLayers.size() - 1; i > 0; i--) {
             for (int j = 0; j < hiddenLayers.get(i).getNeurons().size(); j++) {
-                for (int k = 0; k < hiddenLayers.get(i).getWeights(j).size(); k++) {
+                for (int k = 0; k < hiddenLayers.get(i).getWeights(j).size() - 1; k++) {
                     Double res = hiddenLayers.get(i - 1).getResults().get(k);
                     Double weightChange = -learningRate * hiddenLayers.get(i).getDelta(j) * res;
                     hiddenLayers.get(i).setWeight(j, k, hiddenLayers.get(i).getWeight(j, k) + weightChange);
                 }
+                int k = hiddenLayers.get(i).getWeights(j).size() - 1;
+                Double biasWeightChange = - learningRate * hiddenLayers.get(i).getDelta(j);
+                hiddenLayers.get(i).setWeight(j, k, hiddenLayers.get(i).getWeight(j, k) + biasWeightChange);
             }
         }
         // weights of the first hidden layer (input goes into this layer)
         if (!hiddenLayers.isEmpty()) {
             for (int j = 0; j < hiddenLayers.get(0).getNeurons().size(); j++) {
-                for (int k = 0; k < hiddenLayers.get(0).getWeights(j).size(); k++) {
-                    // predpoklad, ze do neuronu ide len 1 vstup  ???
-                    Double weightChange;
-                    if(j < numberOfInputs){
-                        weightChange = -learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(j);
-                    } else {
-                        weightChange = -learningRate * hiddenLayers.get(0).getDelta(j) * hiddenLayers.get(0).getResults().get(numberOfInputs);
-                    }
+                for (int k = 0; k < hiddenLayers.get(0).getWeights(j).size() - 1; k++) {
+                    Double weightChange = - learningRate * hiddenLayers.get(0).getDelta(j) * inputs.get(k);
                     hiddenLayers.get(0).setWeight(j, k, hiddenLayers.get(0).getWeight(j, k) + weightChange);
                 }
+                int k = hiddenLayers.get(0).getWeights(j).size() - 1;
+                Double biasWeightChange = - learningRate * hiddenLayers.get(0).getDelta(j);
+                hiddenLayers.get(0).setWeight(j, k, hiddenLayers.get(0).getWeight(j, k) + biasWeightChange);
             }
         }
     }
@@ -174,16 +182,17 @@ public class BlackJackMLP implements NeuralNetwork {
                 List<Double> results = new ArrayList<>();;
                 List<Double> targetValues = new ArrayList<>();;
                 while ((nextLine = reader.readNext()) != null) {
-                    if (nextLine.length - 1 != numberOfInputs) {
+                    if (nextLine.length != numberOfInputs + outputLayer.getNeurons().size()) {
                         throw new IllegalArgumentException("Number of inputs does not equal to number of input neurons!");
                     }
-                    input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
-                    results = getResult(input.subList(0, input.size() - 1));  //forward propagation
-                    targetValues = input.subList(input.size() - 1, input.size());
+                    List<Double> lineOfNumber = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
+                    input = lineOfNumber.subList(0, numberOfInputs);
+                    results = getResult(input);  //forward propagation
+                    targetValues = lineOfNumber.subList(numberOfInputs, numberOfInputs + outputLayer.getNeurons().size());
 
                     // backpropagation
                     computeDeltas(computeOutputError(results, targetValues));
-                    updateWeights(input.subList(0, input.size() - 1));
+                    updateWeights(input);
 
                     // compute global error throught all samples from dataset
                     globalError += computeSquaredErrorFunction(results, targetValues);
@@ -195,12 +204,12 @@ public class BlackJackMLP implements NeuralNetwork {
 //                List<Double> targetValues = input.subList(numberOfInputs, input.size() - 1);
 
                 // backpropagation
-                List<Double> outputError = computeOutputError(results, targetValues);
-                computeDeltas(outputError);
-                updateWeights(input.subList(0, input.size() - 1));
+//                List<Double> outputError = computeOutputError(results, targetValues);
+//                computeDeltas(outputError);
+//                updateWeights(input);
 
                 // compute global error throught all samples from dataset
-                globalError += computeSquaredErrorFunction(results, targetValues);
+//                globalError += computeSquaredErrorFunction(results, targetValues);
 
                 counter++;
                 fout.println("\t" + counter + "\t" + globalError);
