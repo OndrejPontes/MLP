@@ -159,8 +159,7 @@ public class BlackJackMLP implements NeuralNetwork {
             globalError = 0d;
             // iterate throught all samples 
             try {
-            CSVReader reader = null;
-            reader = new CSVReader(new FileReader(csvFile));
+            CSVReader reader = new CSVReader(new FileReader(csvFile));
             String[] nextLine;
                 try {
                     while ((nextLine = reader.readNext()) != null) {
@@ -171,10 +170,8 @@ public class BlackJackMLP implements NeuralNetwork {
                         List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
                         List<Double> targetValues = input.subList(numberOfInputs, input.size()-1);
                         
-                        List<Double> outputError = new ArrayList<>();
                         // backpropagation
-                        outputError = computeOutputError(results, targetValues);
-                        computeDeltas(outputError);
+                        computeDeltas(computeOutputError(results, targetValues));
                         updateWeights(input.subList(0, numberOfInputs - 1));
                         
                         // compute global error throught all samples from dataset
