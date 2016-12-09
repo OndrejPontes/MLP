@@ -19,7 +19,7 @@ public class Neuron {
         if (weights.isEmpty()){
             weights.addAll(inputs.stream().map(ignored -> -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble()).collect(Collectors.toList()));
 //            bias = -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble();  // bias in range -1 to 1
-            weights.add(1d);
+            weights.add(-1.0d + (1.0d - (-1.0d)) * new Random().nextDouble());
         }
 
         for (int i = 0; i < inputs.size(); i++)
