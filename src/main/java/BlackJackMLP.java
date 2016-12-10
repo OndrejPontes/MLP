@@ -32,8 +32,8 @@ public class BlackJackMLP implements NeuralNetwork {
             List<String> lines = Files.readAllLines(Paths.get("TestFile.csv"));
 
             List<String> help = Arrays.asList(lines.get(0).split(" "));
-            Integer inputs = Integer.getInteger(help.get(0));
-            Integer outputs = Integer.getInteger(help.get(1));
+            Double inputs = Double.parseDouble(help.get(0));
+            Double outputs = Double.parseDouble(help.get(1));
             Double speed = Double.parseDouble(help.get(2));
 
             List<List<Double>> weights = new ArrayList<>();
@@ -52,7 +52,7 @@ public class BlackJackMLP implements NeuralNetwork {
 
             weights.forEach(x -> setHidden.add(x.size()));
 
-            setLayers(inputs, outputs, setHidden, speed);
+            setLayers(inputs.intValue(), outputs.intValue(), setHidden, speed);
 
             //TODO finish setting weights
 
@@ -167,28 +167,25 @@ public class BlackJackMLP implements NeuralNetwork {
     @Override
     public NeuralNetwork train(File csvFile) {
         Double globalError = Double.POSITIVE_INFINITY;
-        PrintWriter fout = null;
+        PrintWriter plotWriter = null;
         int counter = 0;
         try {
-            fout = new PrintWriter(new FileWriter("plot.dat"));
+            plotWriter = new PrintWriter(new FileWriter("plot.dat"));
 
-            fout.println("#\tX\tY");
+            plotWriter.println("#\tX\tY");
             while (globalError > 0.000f) {
                 globalError = 0d;
                 // iterate throught all samples
                 CSVReader reader = new CSVReader(new FileReader(csvFile));
                 String[] nextLine;
-                List<Double> input = new ArrayList<>();
-                List<Double> results = new ArrayList<>();;
-                List<Double> targetValues = new ArrayList<>();;
                 while ((nextLine = reader.readNext()) != null) {
                     if (nextLine.length != numberOfInputs + outputLayer.getNeurons().size()) {
                         throw new IllegalArgumentException("Number of inputs does not equal to number of input neurons!");
                     }
                     List<Double> lineOfNumber = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList());
-                    input = lineOfNumber.subList(0, numberOfInputs);
-                    results = getResult(input);  //forward propagation
-                    targetValues = lineOfNumber.subList(numberOfInputs, numberOfInputs + outputLayer.getNeurons().size());
+                    List<Double> input = lineOfNumber.subList(0, numberOfInputs);
+                    List<Double> results = getResult(input);  //forward propagation
+                    List<Double> targetValues = lineOfNumber.subList(numberOfInputs, numberOfInputs + outputLayer.getNeurons().size());
 
                     // backpropagation
                     computeDeltas(computeOutputError(results, targetValues));
@@ -197,7 +194,7 @@ public class BlackJackMLP implements NeuralNetwork {
                     // compute global error throught all samples from dataset
                     globalError += computeSquaredErrorFunction(results, targetValues);
                     counter++;
-                    fout.println("\t" + counter + "\t" + globalError);
+                    plotWriter.println("\t" + counter + "\t" + globalError);
                 }
 //                List<Double> input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList()); //nextLine is null, it throw nullpointer exception
 //                List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
@@ -212,7 +209,7 @@ public class BlackJackMLP implements NeuralNetwork {
 //                globalError += computeSquaredErrorFunction(results, targetValues);
 
                 counter++;
-                fout.println("\t" + counter + "\t" + globalError);
+                plotWriter.println("\t" + counter + "\t" + globalError);
 
                 if(counter % 100000 == 0){
                     System.out.println(counter / 100000 + "00 k");
@@ -222,7 +219,7 @@ public class BlackJackMLP implements NeuralNetwork {
         } catch (IOException e) {
             Logger.getLogger(BlackJackMLP.class.getName()).log(Level.SEVERE, null, e);
         } finally {
-            fout.close();
+            plotWriter.close();
         }
         return this;
     }
@@ -291,6 +288,7 @@ public class BlackJackMLP implements NeuralNetwork {
         help = "";
         layer.getNeurons().forEach(neuron -> {
             help += neuron.getBias().toString() + " ";
+            help += neuron.getBiasWeight().toString() + " ";
             neuron.getWeights().forEach(weight -> {
                 help += weight.toString() + " ";
             });

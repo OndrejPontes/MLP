@@ -10,22 +10,23 @@ import java.util.stream.Collectors;
 public class Neuron {
 
     private List<Double> weights = new ArrayList<>();
+    private Double biasWeight = 1d;
     private Double bias = 1d;
     private Double value = 0d;
 
     public Double getResult(List<Double> inputs)
     {
-        value = 0d;
+//        value = 0d;
         if (weights.isEmpty()){
             weights.addAll(inputs.stream().map(ignored -> -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble()).collect(Collectors.toList()));
 //            bias = -1.0d + (1.0d - (-1.0d)) * new Random().nextDouble();  // bias in range -1 to 1
-            weights.add(-1.0d + (1.0d - (-1.0d)) * new Random().nextDouble());
+//            weights.add(-1.0d + (1.0d - (-1.0d)) * new Random().nextDouble());
         }
 
         for (int i = 0; i < inputs.size(); i++)
             value += inputs.get(i) * weights.get(i);
 
-        value += bias * weights.get(weights.size() - 1);
+        value += bias * biasWeight;
 
         return 1.0d / (1.0d + Math.exp(-value));
     }
@@ -61,6 +62,20 @@ public class Neuron {
 
     public Neuron setWeights(List<Double> weights) {
         this.weights = weights;
+        return this;
+    }
+
+    public Double getBiasWeight() {
+        return biasWeight;
+    }
+
+    public Neuron setBiasWeight(Double biasWeight) {
+        this.biasWeight = biasWeight;
+        return this;
+    }
+
+    public Neuron setValue(Double value) {
+        this.value = value;
         return this;
     }
 }
