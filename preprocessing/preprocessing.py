@@ -77,10 +77,10 @@ def normalize_data(stand_deviations, means):
     f.close()
 
 
-# z jednej dvojice (0,0) spraví 2 prvky v zozname  [0, 0]
+# z jednej dvojice (0,0) spravi 2 prvky v zozname  [0, 0]
 def divide_tuples(line):
     newline = []
-    for i in range(0, 9):
+    for i in range(0, 10):
         if i % 2 == 0:  # range[0,2,4,6,8] -> colors (0,0) / (0,1) ...
             newline.append(line[i][0])
             newline.append(line[i][1])
