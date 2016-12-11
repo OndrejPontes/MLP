@@ -66,7 +66,7 @@ public class BlackJackMLP implements NeuralNetwork {
     // compute error for one sample from dataset
     private Double computeSquaredErrorFunction(List<Double> results, List<Double> targetValues) {
         if (results.size() != targetValues.size()) {
-            throw new IllegalArgumentException("Can not compute error function - size of result does not equal to size of target values.");
+            throw new IllegalArgumentException("Can not compute error function - getNeuronsNumber of result does not equal to getNeuronsNumber of target values.");
         }
         Double errorOfSample = 0d;
         for (int i = 0; i < results.size(); i++) {
@@ -198,7 +198,7 @@ public class BlackJackMLP implements NeuralNetwork {
                 }
 //                List<Double> input = Arrays.stream(nextLine).map(Double::parseDouble).collect(Collectors.toList()); //nextLine is null, it throw nullpointer exception
 //                List<Double> results = getResult(input.subList(0, numberOfInputs - 1));  //forward propagation
-//                List<Double> targetValues = input.subList(numberOfInputs, input.size() - 1);
+//                List<Double> targetValues = input.subList(numberOfInputs, input.getNeuronsNumber() - 1);
 
                 // backpropagation
 //                List<Double> outputError = computeOutputError(results, targetValues);

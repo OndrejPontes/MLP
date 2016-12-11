@@ -9,48 +9,43 @@ public class Layer {
     private ArrayList<Neuron> neurons;
     private List<Double> outputs;
 
-    public Layer(int prevNeurons, int thisNeurons) {
-        numberOfNeurons = thisNeurons + 1;
-
-        // allocate everything
+    public Layer(int thisNeurons, int prevNeurons) {
+        numberOfNeurons = thisNeurons + 1;    // + bias
         neurons = new ArrayList<>();
         outputs = new ArrayList<>();
-
         for (int i = 0; i < numberOfNeurons; ++i)
-            neurons.add(new Neuron(prevNeurons + 1));
+            neurons.add(new Neuron(prevNeurons + 1));  // initialize neurons +1 bias
     }
 
-    // add 1 in front of the out vector
-    public static List<Double> add_bias(List<Double> input) {
-        List<Double> out = new ArrayList<>();
-        out.add(1.0d);
-        input.forEach(out::add);
-        return out;
-    }
+    public List<Double> evaluate(List<Double> inputs) {
+        List<Double> tmp;
 
-    // compute the output of the layer
-    public List<Double> evaluate(List<Double> in) {
-        List<Double> inputs;
-
-        // add an input (bias) if necessary
-        if (in.size() != getWeights(0).size())
-            inputs = add_bias(in);
+        if (inputs.size() != getWeights(0).size()){         // check if bias is missing
+            tmp = new ArrayList<>();
+            tmp.add(1.0d);                                  // add bias
+            inputs.forEach(tmp::add);                       // copy others value
+        }
         else
-            inputs = in;
+            tmp = inputs;
 
-        if(getWeights(0).size() != inputs.size()) throw new ArithmeticException();
+        if(getWeights(0).size() != tmp.size()) throw new ArithmeticException();
 
-        // stimulate each neuron of the layer and get its output
         outputs.clear();
         outputs.add(1.0d);
-//        neurons.forEach(x -> outputs.add(x.activate(inputs)));
+//        neurons.forEach(x -> outputs.add(x.evaluate(inputs)));
+
+//        for (Neuron neuron :
+//                neurons) {
+//            outputs.add(neuron.evaluate(tmp));
+//        }
+
         for (int i = 1; i < numberOfNeurons; ++i)
-            outputs.add(neurons.get(i).activate(inputs));
+            outputs.add(neurons.get(i).evaluate(tmp));
 
         return outputs;
     }
 
-    public int size() {
+    public int getNeuronsNumber() {
         return numberOfNeurons;
     }
 
@@ -58,8 +53,8 @@ public class Layer {
         return outputs.get(i);
     }
 
-    public double getActivationDerivative(int i) {
-        return neurons.get(i).getActivationDerivative();
+    public double getDerivation(int i) {
+        return neurons.get(i).getDerivation();
     }
 
     public List<Double> getWeights(int i) {
